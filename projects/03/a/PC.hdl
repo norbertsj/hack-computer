@@ -16,5 +16,15 @@ CHIP PC {
     OUT out[16];
 
     PARTS:
-    // Put your code here:
+    // set load input value Or(load, inc, reset)
+    Or8Way(in[0]=reset, in[1]=load, in[2]=inc, in[3..7]=false, out=loadInput);
+    
+    // set input value for incrementer
+    Inc16(in=state, out=incOutput);
+
+    // set input value for the Register
+    Mux16(a=in, b=incOutput, sel=inc, out=mux1);
+    Mux16(a=mux1, b=in, sel=load, out=mux2);
+    Mux16(a=mux2, b=false, sel=reset, out=muxOutput);
+    Register(in=muxOutput, load=loadInput, out=state, out=out);
 }
