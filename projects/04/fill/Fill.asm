@@ -23,111 +23,71 @@
 
 // KBD = SCREEN + SCREEN_SIZE + 1 (next address)
 
-// PSEUDO
-// ...
+// *** Psuedo code **
+//
+// pixel = 0
+//
+// loop:
+//     if (KBD > 0)
+//         pixel = 1
+//     else
+//         pixel = 0
+//     goto fill
+//
+// fill:
+//    address = SCREEN
+//    while (address < KBD)
+//        *address = pixel
+//        address++
+//    goto loop
+//
+// *** Comment ***
+// If button is pressed, screen memeory map is being written to over and over again,
+// this could be prevented with some state variable (but lets keep it simple for now)
 
-// PSUEDO __start__
+(LOOP)
+    @SCREEN
+    D=A
+    @address
+    M=D
 
-// declare SCREEN, KBD;
-// const ROW_SIZE = 32; // 1 row = 32 words (16-bit)
-// const ROW_COUNT = 256;
-// let filled = false;
-
-// function writeScreen(value) {
-//     for (let row = 0; row < ROW_COUNT; row++) {
-//         for (let word = 0; word < ROW_SIZE; word++) {
-//             const addr = SCREEN + ROW_SIZE*row + word;
-//             *addr = value;
-//         }
-//     }
-// }
-
-// function fillScreen() {
-//     writeScreen(1);
-//     filled = true;
-// }
-
-// function blankScreen() {
-//     writeScreen(0);
-//     filled = false;
-// }
-
-// while(true) {
-//     if (KBD > 0 && !filled) {
-//         fillScreen();
-//         continue;
-//     }
-
-//     if (KBD === 0 && filled) {
-//         blankScreen();
-//         continue;
-//     }
-// }
-
-// PSEUDO __end__
-
-@ROW_SIZE
-M=32
-@ROW_COUNT
-M=256
-
-@FILLED
-M=0
-@FILL
-M=0
-
-@ROW_ADDR
-M=0
-@WORD_ADDR
-M=0
-
-@TMP1
-M=0
-@TMP2
-M=0
-@TMP3
-M=0
-
-(MAIN_LOOP)
-    // zero WRITE_SCREEN loop counters
-    @ROW
-    M=0
-    @WORD
-    M=0
-
-    // simple version
     @KBD
     D=M
-    @FILL_SCREEN
+    @FILL
     D;JGT
-    @BLANK_SCREEN
+    @BLANK
     D;JEQ
 
-(FILL_SCREEN)
-    @FILL
-    M=1
-    @WRITE_SCREEN
-    0;JMP
-
-(BLANK_SCREEN)
-    @FILL
-    M=0
-    @WRITE_SCREEN
-    0;JMP
-
-(WRITE_SCREEN)
-
-(WRITE_ROW)
-
-(WRITE_WORD)
-    @WORD
+(BLANK)
+    @address
     D=M
-    @ROW_SIZE
-    D=D-M
-    @WRITE_ROW
-    D;JGE
+    @KBD
+    D=D-A
+    @LOOP
+    D;JEQ
 
-    @TMP1
-    M=// ROW_SIZE*row ==> daaamn, I could use MULT here, but how?
+    @address
+    A=M
+    M=0
+    @address
+    M=M+1
 
-// damn, this looks a bit too complicated (as I do not know how to use MULT here) will have to simplify
+    @BLANK
+    0;JMP
+
+(FILL)
+    @address
+    D=M
+    @KBD
+    D=D-A
+    @LOOP
+    D;JEQ
+
+    @address
+    A=M
+    M=-1
+    @address
+    M=M+1
+
+    @FILL
+    0;JMP
