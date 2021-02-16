@@ -68,7 +68,8 @@ CHIP CPU {
     Or(a=aluZr, b=notAluNg, out=pcD);
     And(a=notAluZr, b=aluNg, out=pcE);
     Or(a=aluZr, b=aluNg, out=pcG);
-    Mux8Way(a=false, b=pcB, c=aluZr, d=pcD, e=pcE, f=notAluZr, g=pcG, h=true, sel=instruction[0..2], out=pcLoad);
+    Mux8Way(a=false, b=pcB, c=aluZr, d=pcD, e=pcE, f=notAluZr, g=pcG, h=true, sel=instruction[0..2], out=pcMuxLoad);
+    And(a=pcMuxLoad, b=instruction[15], out=pcLoad);
     Not(in=pcLoad, out=pcInc);
     PC(in=outA, load=pcLoad, inc=pcInc, reset=reset, out[0..14]=pc);
 }
