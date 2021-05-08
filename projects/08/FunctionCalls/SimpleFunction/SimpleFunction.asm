@@ -1,5 +1,5 @@
 // function SimpleFunction.test 2
-(SimpleFunction.SimpleFunction.test)
+(SimpleFunction.test)
 // push constant 0
 @0
 D=A
