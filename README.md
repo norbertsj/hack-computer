@@ -1,3 +1,1 @@
-Nand2Tetris computer building course
-
-Custom made functionality can be found in projects folder
+Implementation of [Hack computer](https://en.wikipedia.org/wiki/Hack_computer) using a simple hardware description language.
